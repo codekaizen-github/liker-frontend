@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./counterSlice";
+import emailReducer from "./emailSlice";
 
 const store = configureStore({
 	reducer: {
-		counter: counterReducer,
+		email: emailReducer,
 	},
 });
 
