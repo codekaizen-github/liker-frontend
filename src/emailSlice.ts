@@ -8,7 +8,6 @@ export const emailSlice = createSlice({
 	reducers: {
 		setEmail: (state, action) => {
 			state.value = action.payload;
-			console.log("Email set to: ", action.payload);
 		},
 	},
 });
