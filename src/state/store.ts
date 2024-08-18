@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import emailReducer from "./emailSlice";
+import emailReducer from "./slices/emailSlice";
+import likeEnabledReducer from "./slices/likeEnabledSlice";
 
 const store = configureStore({
 	reducer: {
 		email: emailReducer,
+		likeEnabled: likeEnabledReducer,
 	},
 });
 

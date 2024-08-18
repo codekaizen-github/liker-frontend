@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./store";
-import { setEmail } from "./emailSlice";
+import { RootState } from "../state/store";
+import { setEmail } from "../state/slices/emailSlice";
 import { useState } from "react";
 
 export function Login() {
