@@ -11,6 +11,13 @@ export function LikeBtn() {
 	const pendingLikes = useSelector(
 		(state: RootState) => state.pendingLikes.value
 	);
+	const failedLikes = useSelector(
+		(state: RootState) => state.failedLikes.value
+	);
+	const succeededLikes = useSelector(
+		(state: RootState) => state.succeededLikes.value
+	);
+	const gameState = useSelector((state: RootState) => state.gameState.value);
 
 	const handleLikeClick = () => {
 		dispatch(increment());
@@ -25,6 +32,9 @@ export function LikeBtn() {
 					Like
 				</button>
 				<div>Pending Likes: {pendingLikes}</div>
+				<div>Failed Likes: {failedLikes}</div>
+				<div>Succeeded Likes: {succeededLikes}</div>
+				<div>Game State: {gameState}</div>
 			</div>
 		</>
 	);
