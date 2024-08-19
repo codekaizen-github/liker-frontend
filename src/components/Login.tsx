@@ -1,11 +1,11 @@
-import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../state/store";
-import { setEmail } from "../state/slices/emailSlice";
+import { requestAuthorization } from "../state/slices/emailSlice";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 
 export function Login() {
-	const email = useSelector((state: RootState) => state.email.value);
-	const dispatch = useDispatch();
+	const email = useAppSelector((state: RootState) => state.email.value);
+	const dispatch = useAppDispatch();
 	const [inputEmail, setInputEmail] = useState(email);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +13,7 @@ export function Login() {
 	};
 
 	const handleButtonClick = () => {
-		dispatch(setEmail(inputEmail));
+		dispatch(requestAuthorization(inputEmail));
 	};
 
 	return (
