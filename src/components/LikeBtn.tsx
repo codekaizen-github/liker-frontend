@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../state/store";
-import { increment } from "../state/slices/pendingLikesSlice";
+import { AppDispatch, RootState } from "../state/store";
+import { handleClick } from "../state/slices/pendingLikesSlice";
 
 export function LikeBtn() {
-	const dispatch = useDispatch();
+	const dispatch: AppDispatch = useDispatch();
 	const email = useSelector((state: RootState) => state.email.value);
 	const likeEnabled = useSelector(
 		(state: RootState) => state.likeEnabled.value
@@ -20,7 +20,7 @@ export function LikeBtn() {
 	const gameState = useSelector((state: RootState) => state.gameState.value);
 
 	const handleLikeClick = () => {
-		dispatch(increment());
+		dispatch(handleClick());
 	};
 
 	return (

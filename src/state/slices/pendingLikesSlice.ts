@@ -1,4 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { db } from "../../db";
+
+// First, create the thunk
+export const handleClick = createAsyncThunk("pendingLikes/click", async () => {
+	const resultId = await db.streamIn.add({
+		data: { testProp: "testValue" },
+	});
+	const result = await db.streamIn.where("id").equals(resultId).first();
+	console.log("test");
+	return result;
+});
 
 export const pendingLikesSlice = createSlice({
 	name: "pendingLikes",
@@ -15,6 +26,13 @@ export const pendingLikesSlice = createSlice({
 		reset: () => {
 			return { value: 0 };
 		},
+	},
+	extraReducers: (builder) => {
+		// Add reducers for additional action types here, and handle loading state as needed
+		builder.addCase(handleClick.fulfilled, (state) => {
+			// Add user to the state array
+			state.value += 1;
+		});
 	},
 });
 
