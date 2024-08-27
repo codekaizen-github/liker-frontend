@@ -7,6 +7,7 @@ export const handleClick = createAsyncThunk("pendingLikes/click", async () => {
 		data: { testProp: "testValue" },
 	});
 	const result = await db.streamIn.where("id").equals(resultId).first();
+	console.log({ result });
 	console.log("test");
 	return result;
 });
