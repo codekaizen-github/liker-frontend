@@ -12,9 +12,30 @@ export const emailSlice = createSlice({
 	},
 });
 
+const likerWritePath = import.meta.env.VITE_LIKER_WRITE_PATH_URL ?? "";
+
 export const requestAuthorization =
 	(email: string) => async (dispatch: Dispatch) => {
-		console.log("is this working?");
+		fetch(likerWritePath, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				data: {
+					type: "user-login-intended",
+					payload: {
+						timestamp: new Date().toISOString(),
+						user: {
+							email: email,
+						},
+					},
+				},
+			}),
+		})
+			.then((response) => response.json())
+			.then((data) => console.log(data))
+			.catch((error) => console.error(error));
 		dispatch(emailSlice.actions.setEmail(email));
 	};
 
