@@ -3,10 +3,10 @@ import { db } from "../../db";
 
 // First, create the thunk
 export const handleClick = createAsyncThunk("pendingLikes/click", async () => {
-	const resultId = await db.streamIn.add({
+	const resultId = await db.streamOut.add({
 		data: { testProp: "testValue" },
 	});
-	const result = await db.streamIn.where("id").equals(resultId).first();
+	const result = await db.streamOut.where("id").equals(resultId).first();
 	console.log("test");
 	return result;
 });
