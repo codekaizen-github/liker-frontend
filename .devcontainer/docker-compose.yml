@@ -1,0 +1,18 @@
+services:
+    liker_frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: sleep infinity
+        volumes:
+            - ./:/workspace
+        networks:
+            - liker_external_network
+            - liker_frontend_internal_network
+networks:
+    liker_external_network:
+        external: true
+        name: 'liker'
+    liker_frontend_internal_network:
+        external: false
+        name: 'liker_frontend_internal_network'

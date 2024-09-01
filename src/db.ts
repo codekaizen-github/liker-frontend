@@ -1,19 +1,47 @@
 // db.ts
 import Dexie, { type EntityTable } from "dexie";
 
-interface UpstreamControl {
+export interface OrderedStreamEvent {
 	id: number;
-	streamInId: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any;
 }
-interface StreamIn {
+
+export interface NewStreamEvent {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any;
+}
+
+export interface UpstreamControl {
+	id: number;
+	streamOutId: number;
+}
+
+export type NewUpstreamControl = {
+	id: number;
+	streamOutId: number;
+} & {};
+
+export type UpstreamControlUpdate = {
+	id?: number | undefined;
+	streamOutId?: number | undefined;
+};
+
+export type NewStreamOut = {
+	id?: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any;
+} & {};
+
+export interface StreamOut {
 	id: number;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data: any;
 }
 
 const db = new Dexie("Database") as Dexie & {
-	streamIn: EntityTable<
-		StreamIn,
+	streamOut: EntityTable<
+		StreamOut,
 		"id" // primary key "id" (for the typings only)
 	>;
 	upstreamControl: EntityTable<
@@ -24,9 +52,8 @@ const db = new Dexie("Database") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-	upstreamControl: "id, streamInId", // primary key "id" (for the runtime!)
-	streamIn: "++id, data", // primary key "id" (for the runtime!)
+	upstreamControl: "id, streamOutId", // primary key "id" (for the runtime!)
+	streamOut: "++id, data", // primary key "id" (for the runtime!)
 });
 
-export type { StreamIn };
 export { db };

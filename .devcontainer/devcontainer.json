@@ -1,10 +1,16 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "Node.js & TypeScript",
+	"name": "liker-frontend",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
-
+	"dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
+	"service": "liker_frontend",
+	"workspaceFolder": "/workspace",
+    // "postCreateCommand": "npm ci",
+	// https://tjtelan.com/blog/how-to-link-multiple-docker-compose-via-network/
+	// https://containers.dev/guide/dockerfile
+	// https://github.com/microsoft/vscode-remote-release/issues/2485
+	"initializeCommand": "docker network create liker || echo 'Already exists'",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
