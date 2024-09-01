@@ -10,8 +10,17 @@ import {
     StreamEventOutOfSequenceException,
 } from './exceptions';
 import { Dexie, Transaction } from 'dexie';
+import store from './state/store';
+import { gameStarted } from './state/slices/gameStateSlice';
 
 export async function notifySubscribers(streamOut: StreamOut): Promise<void> {
+    switch (streamOut.data.type) {
+        case 'game-started-succeeded':
+            store.dispatch(gameStarted());
+            break;
+        default:
+            break;
+    }
     console.log({ streamOut });
 }
 
