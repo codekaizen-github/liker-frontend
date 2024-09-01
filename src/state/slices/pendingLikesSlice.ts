@@ -1,16 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { db } from '../../db';
+import { createSlice, Dispatch } from '@reduxjs/toolkit';
+import writeEvent from '../../writeEvent';
+import { RootGetStateType } from '../store';
 
 // First, create the thunk
-
-export const handleClick = createAsyncThunk('pendingLikes/click', async () => {
-    const resultId = await db.streamOut.add({
-        data: { testProp: 'testValue' },
-    });
-    const result = await db.streamOut.where('id').equals(resultId).first();
-    console.log('test');
-    return result;
-});
 
 export const pendingLikesSlice = createSlice({
     name: 'pendingLikes',
@@ -28,15 +20,21 @@ export const pendingLikesSlice = createSlice({
             return { value: 0 };
         },
     },
-    extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(handleClick.fulfilled, (state) => {
-            // Add user to the state array
-            state.value += 1;
-        });
-    },
 });
 
-export const { increment, decrement, reset } = pendingLikesSlice.actions;
+export const newLike =
+    () => async (dispatch: Dispatch, getState: RootGetStateType) => {
+        await writeEvent('like-intended', {
+            game: {
+                id: getState().gameId.value,
+            },
+        });
+        dispatch(pendingLikesSlice.actions.increment());
+    };
 
-export default pendingLikesSlice.reducer;
+// Extract the action creators object and the reducer
+const { actions, reducer } = pendingLikesSlice;
+// Extract and export each action creator by name
+export const { increment, decrement, reset } = actions;
+// Export the reducer, either as a default or named export
+export default reducer;

@@ -32,6 +32,5 @@ export async function createStreamOut(
     const insertResult = await trx
         .table<NewStreamOut>('streamOut')
         .add(streamOut);
-    console.log({ insertResult });
     return await findStreamOutById(trx, Number(insertResult));
 }

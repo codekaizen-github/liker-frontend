@@ -68,8 +68,7 @@ export function LoggedIn({ email }: LoggedInProps) {
                                 trx,
                                 messageData
                             );
-                            await insertIntoIgnoreUpstreamControl(trx, {
-                                id: 0,
+                            await updateUpstreamControl(trx, 0, {
                                 streamOutId: messageData.userEventId,
                             });
                             return results;
