@@ -15,6 +15,7 @@ import {
     updateUpstreamControl,
 } from './upstreamControlStore';
 import { processStreamEvent } from './streamProcessor';
+import { notifySubscribers } from './subscriptions';
 function App() {
     const email = useSelector((state: RootState) => state.email.value);
     const WS_URL = 'ws://localhost:3030';
@@ -32,11 +33,11 @@ function App() {
                 console.log({ messageData });
                 // Get the upstream control lock
                 try {
-                    await db.transaction(
+                    const results = await db.transaction(
                         'rw',
                         [db.upstreamControl, db.streamOut],
                         async (trx) => {
-                            console.log('inside transaction')
+                            console.log('inside transaction');
                             // const upstreamForUpdateLock =
                             //     await getUpstreamControlForUpdate(trx, 0); // Prevents duplicate entry keys and insertions in other tables
                             const upstreamControlIgnore =
@@ -53,7 +54,10 @@ function App() {
                                     'Failed to get upstream control lock'
                                 );
                             }
-                            if (upstreamControl.streamOutId >= messageData.userEventId) {
+                            if (
+                                upstreamControl.streamOutId >=
+                                messageData.userEventId
+                            ) {
                                 throw new StreamEventIdDuplicateException();
                             }
                             if (
@@ -61,15 +65,24 @@ function App() {
                                 messageData.userEventId
                             ) {
                                 console.log('we have a winner!');
-                                await processStreamEvent(trx, messageData);
+                                const results = await processStreamEvent(
+                                    trx,
+                                    messageData
+                                );
                                 await insertIntoIgnoreUpstreamControl(trx, {
                                     id: 0,
                                     streamOutId: messageData.userEventId,
                                 });
+                                return results;
                             }
                             throw new StreamEventOutOfSequenceException();
                         }
                     );
+                    if (results.length) {
+                        for (const result of results) {
+                            notifySubscribers(result);
+                        }
+                    }
                 } catch (e) {
                     if (e instanceof StreamEventIdDuplicateException) {
                         console.log('Duplicate event ID', message);
@@ -108,11 +121,11 @@ function App() {
                         );
                         const response = await fetch(urlParsed.toString());
                         const streamOuts = await response.json();
-                        console.log({streamOuts});
+                        console.log({ streamOuts });
                         for (const streamOut of streamOuts) {
                             console.log('...next interation!');
                             try {
-                                await db.transaction(
+                                const results = await db.transaction(
                                     'rw',
                                     [db.upstreamControl, db.streamOut],
                                     async (trx) => {
@@ -157,23 +170,30 @@ function App() {
                                             console.log(
                                                 'we have a winner! on 2nd pass'
                                             );
-                                            await processStreamEvent(
-                                                trx,
-                                                streamOut
-                                            );
+                                            const results =
+                                                await processStreamEvent(
+                                                    trx,
+                                                    streamOut
+                                                );
                                             await updateUpstreamControl(
                                                 trx,
                                                 0,
                                                 {
                                                     id: 0,
-                                                    streamOutId: streamOut.userEventId,
+                                                    streamOutId:
+                                                        streamOut.userEventId,
                                                 }
                                             );
-                                            return;
+                                            return results;
                                         }
                                         throw new StreamEventOutOfSequenceException();
                                     }
                                 );
+                                if (results.length) {
+                                    for (const result of results) {
+                                        notifySubscribers(result);
+                                    }
+                                }
                             } catch (e) {
                                 if (
                                     e instanceof StreamEventIdDuplicateException

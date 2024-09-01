@@ -11,10 +11,8 @@ import {
 } from './exceptions';
 import { Dexie, Transaction } from 'dexie';
 
-export async function notifySubscribers(
-    streamOut: StreamOut
-): Promise<void> {
-    console.log('notifying subscribers');
+export async function notifySubscribers(streamOut: StreamOut): Promise<void> {
+    console.log({ streamOut });
 }
 
 export async function notifySubscriberUrl(
