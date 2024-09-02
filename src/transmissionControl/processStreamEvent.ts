@@ -1,4 +1,4 @@
-import { createStreamOutFromStreamEvent } from '../streamOutStore';
+import { createTotallyOrderedStreamEvent } from '../createTotallyOrderedStreamEvent';
 // import { notifySubscribers } from "./subscriptions";
 import { Transaction } from 'dexie';
 import {
@@ -11,7 +11,7 @@ export async function processStreamEvent(
     newTotallyOrderedStreamEvent: NewTotallyOrderedStreamEvent
 ) {
     const results: TotallyOrderedStreamEvent[] = [];
-    const streamOut = await createStreamOutFromStreamEvent(
+    const streamOut = await createTotallyOrderedStreamEvent(
         trx,
         newTotallyOrderedStreamEvent
     );
