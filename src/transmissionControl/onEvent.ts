@@ -5,8 +5,12 @@ import {
 import { FetchUpstream } from './buildFetchUpstream';
 import { notifySubscribers } from './notifySubscribers';
 import { onEventProcessSingle } from './onEventProcessSingle';
+import { syncUpstream } from './syncUpstream';
 
-export default async function onEvent(event: any, syncUpstream: FetchUpstream) {
+export default async function onEvent(
+    event: any,
+    fetchUpstream: FetchUpstream
+) {
     // Random delay
     await new Promise((resolve) => setTimeout(resolve, Math.random() * 1000));
     console.log({ event });
@@ -25,7 +29,7 @@ export default async function onEvent(event: any, syncUpstream: FetchUpstream) {
         }
         if (e instanceof StreamEventOutOfSequenceException) {
             console.log('Out of sequence event ID', event);
-            await syncUpstream(syncUpstream);
+            await syncUpstream(fetchUpstream);
         }
     }
 }
