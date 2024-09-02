@@ -7,7 +7,7 @@ export function buildFetchUpstream(url: string): FetchUpstream {
     return async function fetchUpstream(afterId: number) {
         urlParsed.searchParams.append('afterId', afterId.toString());
         const response = await fetch(urlParsed.toString());
-        const streamIns = await response.json();
-        return streamIns;
+        const streamOuts = await response.json();
+        return streamOuts;
     };
 }

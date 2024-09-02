@@ -14,7 +14,7 @@ import { TotallyOrderedStreamEvent } from './types';
 export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
     const results = await db.transaction(
         'rw',
-        [db.upstreamControl, db.streamIn],
+        [db.upstreamControl, db.streamOut],
         async (trx) => {
             const upstreamForUpdateLock = await getUpstreamControlForUpdate(
                 trx,
@@ -24,7 +24,7 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
                 trx,
                 {
                     id: 0,
-                    streamInId: 0,
+                    streamOutId: 0,
                 }
             );
             const upstreamControl = await getUpstreamControlForUpdate(trx, 0);
@@ -35,15 +35,15 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
             if (upstreamControl === undefined) {
                 throw new Error('Failed to get upstream control lock');
             }
-            if (upstreamControl.streamInId >= event.id) {
+            if (upstreamControl.streamOutId >= event.id) {
                 throw new StreamEventIdDuplicateException();
             }
-            if (upstreamControl.streamInId + 1 === event.id) {
+            if (upstreamControl.streamOutId + 1 === event.id) {
                 console.log('we have a winner! on 2nd pass');
                 const results = await processStreamEvent(trx, event);
                 await updateUpstreamControl(trx, 0, {
                     id: 0,
-                    streamInId: event.id,
+                    streamOutId: event.id,
                 });
                 return results;
             }

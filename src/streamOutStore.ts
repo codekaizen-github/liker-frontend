@@ -7,13 +7,13 @@ import {
 } from './db';
 
 export async function findStreamOutById(trx: Transaction, id: number) {
-    const streamIn = await trx.table<StreamOut>('streamIn').get(id);
-    if (streamIn === undefined) {
+    const streamOut = await trx.table<StreamOut>('streamOut').get(id);
+    if (streamOut === undefined) {
         return undefined;
     }
     return {
-        ...streamIn,
-        data: JSON.parse(streamIn.data),
+        ...streamOut,
+        data: JSON.parse(streamOut.data),
     };
 }
 
@@ -21,26 +21,26 @@ export async function createStreamOutFromStreamEvent(
     trx: Transaction,
     streamEvent: NewStreamEvent | OrderedStreamEvent
 ) {
-    const streamIn = await createStreamOut(trx, {
+    const streamOut = await createStreamOut(trx, {
         ...streamEvent,
         id: undefined,
     });
-    if (streamIn === undefined) {
+    if (streamOut === undefined) {
         return undefined;
     }
-    return streamIn;
+    return streamOut;
 }
 
 export async function createStreamOut(
     trx: Transaction,
-    streamIn: NewStreamOut
+    streamOut: NewStreamOut
 ) {
     const insertResult = await trx
-        .table<NewStreamOut>('streamIn')
-        .add(streamIn);
-    const streamInResult = await findStreamOutById(trx, Number(insertResult));
-    if (streamInResult === undefined) {
+        .table<NewStreamOut>('streamOut')
+        .add(streamOut);
+    const streamOutResult = await findStreamOutById(trx, Number(insertResult));
+    if (streamOutResult === undefined) {
         throw new Error('Failed to create stream out');
     }
-    return streamInResult;
+    return streamOutResult;
 }

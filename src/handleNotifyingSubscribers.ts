@@ -11,14 +11,14 @@ import {
 import { setId } from './state/slices/gameIdSlice';
 import { TotallyOrderedStreamEvent } from './transmissionControl/types';
 export async function handleNotifyingSubscribers(
-    streamIn: TotallyOrderedStreamEvent
+    streamOut: TotallyOrderedStreamEvent
 ): Promise<void> {
-    console.log({ streamIn });
-    switch (streamIn.data.type) {
+    console.log({ streamOut });
+    switch (streamOut.data.type) {
         case 'game-started-succeeded':
             store.dispatch(pendingLikesSliceReset());
             store.dispatch(succeededLikesSliceReset());
-            store.dispatch(setId(streamIn.data.payload.game.id));
+            store.dispatch(setId(streamOut.data.payload.game.id));
             store.dispatch(gameStarted());
             break;
         case 'like-succeeded':
