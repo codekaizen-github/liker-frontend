@@ -24,15 +24,11 @@ export async function createStreamOutFromStreamEvent(
     const streamOut = await createStreamOut(trx, {
         ...streamEvent,
         id: undefined,
-        data: JSON.stringify(streamEvent.data),
     });
     if (streamOut === undefined) {
         return undefined;
     }
-    return {
-        ...streamOut,
-        data: JSON.parse(streamOut.data),
-    };
+    return streamOut;
 }
 
 export async function createStreamOut(
@@ -46,8 +42,5 @@ export async function createStreamOut(
     if (streamOutResult === undefined) {
         throw new Error('Failed to create stream out');
     }
-    return {
-        ...streamOutResult,
-        data: JSON.parse(streamOutResult.data),
-    };
+    return streamOutResult;
 }
