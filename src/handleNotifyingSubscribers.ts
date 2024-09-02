@@ -1,4 +1,3 @@
-import { StreamOut } from './db';
 import store from './state/store';
 import { gameStarted } from './state/slices/gameStateSlice';
 import {
@@ -10,8 +9,9 @@ import {
     reset as succeededLikesSliceReset,
 } from './state/slices/succeededLikesSlice';
 import { setId } from './state/slices/gameIdSlice';
+import { TotallyOrderedStreamEvent } from './transmissionControl/types';
 export async function handleNotifyingSubscribers(
-    streamOut: StreamOut
+    streamOut: TotallyOrderedStreamEvent
 ): Promise<void> {
     console.log({ streamOut });
     switch (streamOut.data.type) {

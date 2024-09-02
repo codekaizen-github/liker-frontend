@@ -21,7 +21,7 @@ export async function processStreamEvent(
     results.push({
         id: streamOut.id,
         totalOrderId: newTotallyOrderedStreamEvent.totalOrderId,
-        data: JSON.parse(streamOut.data),
+        data: streamOut.data,
     });
     return results;
 }
