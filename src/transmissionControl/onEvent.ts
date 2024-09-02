@@ -6,9 +6,10 @@ import { FetchUpstream } from './buildFetchUpstream';
 import { notifySubscribers } from './notifySubscribers';
 import { onEventProcessSingle } from './onEventProcessSingle';
 import { syncUpstream } from './syncUpstream';
+import { TotallyOrderedStreamEvent } from './types';
 
 export default async function onEvent(
-    event: any,
+    event: TotallyOrderedStreamEvent,
     fetchUpstream: FetchUpstream
 ) {
     // Random delay
