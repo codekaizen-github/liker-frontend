@@ -24,7 +24,7 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
                 trx,
                 {
                     id: 0,
-                    streamOutId: 0,
+                    streamId: 0,
                 }
             );
             const upstreamControl = await getUpstreamControlForUpdate(trx, 0);
@@ -35,15 +35,15 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
             if (upstreamControl === undefined) {
                 throw new Error('Failed to get upstream control lock');
             }
-            if (upstreamControl.streamOutId >= event.id) {
+            if (upstreamControl.streamId >= event.id) {
                 throw new StreamEventIdDuplicateException();
             }
-            if (upstreamControl.streamOutId + 1 === event.id) {
+            if (upstreamControl.streamId + 1 === event.id) {
                 console.log('we have a winner! on 2nd pass');
                 const results = await processStreamEvent(trx, event);
                 await updateUpstreamControl(trx, 0, {
                     id: 0,
-                    streamOutId: event.id,
+                    streamId: event.id,
                 });
                 return results;
             }
