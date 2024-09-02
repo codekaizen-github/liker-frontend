@@ -1,5 +1,5 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
-import writeEvent from '../../transmissionControl/writeEvent';
+import writeEvent from '../../writeEvent';
 import { RootGetStateType } from '../store';
 
 // First, create the thunk
