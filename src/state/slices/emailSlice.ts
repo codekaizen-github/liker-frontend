@@ -1,5 +1,5 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
-import writeEvent from '../../writeEvent';
+import writeEvent from '../../transmissionControl/writeEvent';
 
 export const emailSlice = createSlice({
     name: 'email',

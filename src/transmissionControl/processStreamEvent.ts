@@ -1,5 +1,5 @@
-import { NewStreamEvent } from './db';
-import { createStreamOutFromStreamEvent } from './streamOutStore';
+import { NewStreamEvent } from '../db';
+import { createStreamOutFromStreamEvent } from '../streamOutStore';
 // import { notifySubscribers } from "./subscriptions";
 import { Transaction } from 'dexie';
 
