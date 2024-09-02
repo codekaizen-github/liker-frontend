@@ -1,17 +1,17 @@
 import { Transaction } from 'dexie';
-import { createStreamOutFromStreamEvent } from './streamOutStore';
+import { createStreamOutFromStreamEvent } from './streamInStore';
 import { NewTotallyOrderedStreamEvent } from './transmissionControl/types';
 
 export async function createTotallyOrderedStreamEvent(
     trx: Transaction,
     streamEvent: NewTotallyOrderedStreamEvent
 ) {
-    const streamOut = await createStreamOutFromStreamEvent(trx, {
+    const streamIn = await createStreamOutFromStreamEvent(trx, {
         ...streamEvent,
         id: undefined,
     });
-    if (streamOut === undefined) {
+    if (streamIn === undefined) {
         return undefined;
     }
-    return streamOut;
+    return streamIn;
 }

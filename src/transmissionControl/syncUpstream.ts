@@ -22,7 +22,7 @@ export async function syncUpstream(fetchUpstream: FetchUpstream) {
                 trx,
                 {
                     id: 0,
-                    streamOutId: 0,
+                    streamInId: 0,
                 }
             );
             const upstreamControl = await getUpstreamControlForUpdate(trx, 0);
@@ -32,7 +32,7 @@ export async function syncUpstream(fetchUpstream: FetchUpstream) {
     if (upstreamControl === undefined) {
         throw new Error('Failed to get upstream control lock');
     }
-    const events = await fetchUpstream(upstreamControl.streamOutId);
+    const events = await fetchUpstream(upstreamControl.streamInId);
     console.log({ events: events });
     for (const event of events) {
         console.log('...next interation!');

@@ -11,17 +11,17 @@ export async function processStreamEvent(
     newTotallyOrderedStreamEvent: NewTotallyOrderedStreamEvent
 ) {
     const results: TotallyOrderedStreamEvent[] = [];
-    const streamOut = await createTotallyOrderedStreamEvent(
+    const streamIn = await createTotallyOrderedStreamEvent(
         trx,
         newTotallyOrderedStreamEvent
     );
-    if (streamOut === undefined) {
+    if (streamIn === undefined) {
         throw new Error('Failed to create stream out');
     }
     results.push({
-        id: streamOut.id,
+        id: streamIn.id,
         totalOrderId: newTotallyOrderedStreamEvent.totalOrderId,
-        data: streamOut.data,
+        data: streamIn.data,
     });
     return results;
 }
