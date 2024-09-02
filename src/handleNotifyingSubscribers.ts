@@ -10,7 +10,7 @@ import {
     reset as succeededLikesSliceReset,
 } from './state/slices/succeededLikesSlice';
 import { setId } from './state/slices/gameIdSlice';
-export async function handleEventNotification(
+export async function handleNotifyingSubscribers(
     streamOut: StreamOut
 ): Promise<void> {
     console.log({ streamOut });
