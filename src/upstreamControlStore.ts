@@ -3,7 +3,7 @@ import {
     UpstreamControlUpdate,
     UpstreamControl,
     NewUpstreamControl,
-} from './db';
+} from './database';
 
 // db.transaction('rw', db.upstreamControl, async (trx) => {
 
@@ -18,7 +18,6 @@ export async function getUpstreamControlForUpdate(
     trx: Transaction,
     id: number
 ) {
-    console.log('getting upstream control lock');
     try {
         return await trx
             .table<UpstreamControl>('upstreamControl')
@@ -44,13 +43,11 @@ export async function insertIntoIgnoreUpstreamControl(
     trx: Transaction,
     upstreamControl: NewUpstreamControl
 ) {
-    console.log('insertIntoIgnoreUpstreamControl');
     // Check to see if the ignoreUpstreamControl already exists
     const ignoreUpstreamControl = await trx
         .table<UpstreamControl>('upstreamControl')
         .where({ id: upstreamControl.id })
         .first();
-    console.log({ ignoreUpstreamControl });
     if (ignoreUpstreamControl) {
         return;
     }

@@ -1,27 +1,17 @@
-import { createTotallyOrderedStreamEvent } from '../createTotallyOrderedStreamEvent';
-// import { notifySubscribers } from "./subscriptions";
 import { Transaction } from 'dexie';
 import {
     NewTotallyOrderedStreamEvent,
     TotallyOrderedStreamEvent,
 } from './types';
+import { createTotallyOrderedStreamEvents } from '../createTotallyOrderedStreamEvents';
 
 export async function processStreamEvent(
     trx: Transaction,
-    newTotallyOrderedStreamEvent: NewTotallyOrderedStreamEvent
-) {
-    const results: TotallyOrderedStreamEvent[] = [];
-    const streamOut = await createTotallyOrderedStreamEvent(
+    newNotYetTotallyOrderedStreamEvent: NewTotallyOrderedStreamEvent
+): Promise<TotallyOrderedStreamEvent[]> {
+    const results = await createTotallyOrderedStreamEvents(
         trx,
-        newTotallyOrderedStreamEvent
+        newNotYetTotallyOrderedStreamEvent
     );
-    if (streamOut === undefined) {
-        throw new Error('Failed to create stream out');
-    }
-    results.push({
-        id: streamOut.id,
-        totalOrderId: newTotallyOrderedStreamEvent.totalOrderId,
-        data: streamOut.data,
-    });
     return results;
 }

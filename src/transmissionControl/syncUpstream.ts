@@ -1,41 +1,28 @@
-import { db } from '../db';
 import {
     StreamEventIdDuplicateException,
     StreamEventOutOfSequenceException,
 } from './exceptions';
 import { FetchUpstream } from './buildFetchUpstream';
 import { notifySubscribers } from './notifySubscribers';
-import {
-    getUpstreamControlForUpdate,
-    insertIntoIgnoreUpstreamControl,
-} from '../upstreamControlStore';
 import { onEventProcessSingle } from './onEventProcessSingle';
+import { getUpstreamControl } from '../getUpstreamControl';
 
-export async function syncUpstream(fetchUpstream: FetchUpstream) {
-    const upstreamControl = await db.transaction(
-        'rw',
-        [db.upstreamControl],
-        async (trx) => {
-            // const upstreamForUpdateLock =
-            //     await getUpstreamControlForUpdate(trx, 0); // Prevents duplicate entry keys and insertions in other tables
-            const upstreamControlIgnore = await insertIntoIgnoreUpstreamControl(
-                trx,
-                {
-                    id: 0,
-                    streamId: 0,
-                }
-            );
-            const upstreamControl = await getUpstreamControlForUpdate(trx, 0);
-            return upstreamControl;
-        }
+export async function syncUpstream(
+    fetchUpstream: FetchUpstream,
+    totalOrderId: number,
+    eventIdStart: number,
+    eventIdEnd?: number,
+    limit?: number,
+    offset?: number
+) {
+    const events = await fetchUpstream(
+        totalOrderId,
+        eventIdStart,
+        eventIdEnd,
+        limit,
+        offset
     );
-    if (upstreamControl === undefined) {
-        throw new Error('Failed to get upstream control lock');
-    }
-    const events = await fetchUpstream(upstreamControl.streamId);
-    console.log({ events: events });
     for (const event of events) {
-        console.log('...next interation!');
         try {
             const results = await onEventProcessSingle(event);
             if (results.length) {
@@ -45,17 +32,23 @@ export async function syncUpstream(fetchUpstream: FetchUpstream) {
             }
         } catch (e) {
             if (e instanceof StreamEventIdDuplicateException) {
-                console.log('Duplicate event ID on 2nd pass', event);
                 continue;
             }
             if (e instanceof StreamEventOutOfSequenceException) {
-                console.log('Out of sequence event ID on 2nd pass', {
-                    upstreamControl,
-                    event: event,
-                });
                 continue;
             }
             throw e;
         }
     }
+}
+
+export async function syncUpstreamFromUpstreamControl(
+    fetchUpstream: FetchUpstream
+) {
+    const upstreamControl = await getUpstreamControl();
+    syncUpstream(
+        fetchUpstream,
+        upstreamControl.totalOrderId,
+        upstreamControl.streamId
+    );
 }
