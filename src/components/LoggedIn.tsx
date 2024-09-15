@@ -21,6 +21,7 @@ export function LoggedIn({ email }: LoggedInProps) {
         onMessage: async (message) => {
             await onEvent(JSON.parse(message.data), fetchUpstream);
         },
+        shouldReconnect: (closeEvent) => true,
     });
     // TODO: Process in total order
     return (
