@@ -6,7 +6,14 @@ import {
 } from './transmissionControl/types';
 
 export async function findStreamOutById(trx: Transaction, id: number) {
-    return await trx.table<StreamOut>('streamOut').get(id);
+    const result = await trx.table<StreamOut>('streamOut').get(id);
+    if (undefined === result) {
+        return undefined;
+    }
+    return {
+        ...result,
+        data: JSON.parse(result.data),
+    };
 }
 
 export async function findTotallyOrderedStreamEvents(

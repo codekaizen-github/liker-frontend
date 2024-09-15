@@ -22,9 +22,11 @@ export async function syncUpstream(
         limit,
         offset
     );
+    console.log({ syncUpstreamEvents: events });
     for (const event of events) {
         try {
             const results = await onEventProcessSingle(event);
+            console.log({ syncUpstreamResults: results });
             if (results.length) {
                 for (const result of results) {
                     notifySubscribers(result);

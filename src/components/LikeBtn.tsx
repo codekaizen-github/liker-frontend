@@ -9,7 +9,7 @@ export function LikeBtn() {
         (state: RootState) => state.likeEnabled.value
     );
     const pendingLikes = useSelector(
-        (state: RootState) => state.pendingLikes.value
+        (state: RootState) => state.pendingLikes.value.length
     );
     const failedLikes = useSelector(
         (state: RootState) => state.failedLikes.value

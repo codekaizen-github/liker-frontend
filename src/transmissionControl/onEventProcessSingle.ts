@@ -33,9 +33,11 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
             );
             const upstreamControl = await getUpstreamControlForUpdate(trx, 0);
             if (upstreamControl === undefined) {
+                console.log('Failed to get upstream control lock');
                 throw new Error('Failed to get upstream control lock');
             }
             if (upstreamControl.streamId >= event.id) {
+                console.log('Stream event ID duplicate');
                 throw new StreamEventIdDuplicateException();
             }
             if (upstreamControl.streamId + 1 === event.id) {
@@ -48,6 +50,7 @@ export async function onEventProcessSingle(event: TotallyOrderedStreamEvent) {
                 await updateUpstreamControl(trx, 0, upstreamControlToUpdate);
                 return results;
             }
+            console.log('Stream event out of sequence');
             throw new StreamEventOutOfSequenceException();
         }
     );
