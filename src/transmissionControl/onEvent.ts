@@ -36,9 +36,8 @@ export default async function onEvent(
             await syncUpstream(
                 fetchUpstream,
                 event.totalOrderId,
-                upstreamControl.streamId
-                // event.id // We cannot do this because the ID we are passing in is actually the userEventId and not the streamId
-                // So we would need to either pass both IDs when sending events from upstream to differentiate, or update the upstream GET endpoint to use userEventId instead
+                upstreamControl.streamId,
+                event.id // Note that the upstream must expect to receive userEventId
             );
         }
     }
