@@ -21,9 +21,10 @@ export const pendingLikesSlice = createSlice({
             state.value = state.value.filter((id) => id !== action.payload);
         },
         removeBulk: (state, action: PayloadAction<string[]>) => {
-            state.value = state.value.filter(
+            const newStateValue = state.value.filter(
                 (id) => !action.payload.includes(id)
             );
+            state.value = newStateValue;
         },
         reset: () => {
             return initialState;
