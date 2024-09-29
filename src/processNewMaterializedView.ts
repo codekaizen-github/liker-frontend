@@ -6,6 +6,7 @@ import {
 } from './state/slices/gamesSlice';
 
 import { removeBulk as pendingLikesSliceRemoveBulk } from './state/slices/pendingLikesSlice';
+import { removeBulk as pendingGameStartedIntendedsSliceRemoveBulk } from './state/slices/pendingGameStartedIntendedSlice';
 
 export async function processNewMaterializedView(
     view: {
@@ -29,11 +30,16 @@ export async function processNewMaterializedView(
         return;
     }
     const pendingLikes = store.getState().pendingLikes.value;
+    const pendingGameStartedIntendeds =
+        store.getState().pendingGameStartedIntendeds.value;
     const fencingTokensResponse = await fetchUserFencingTokens(
-        pendingLikes,
+        [...pendingLikes, ...pendingGameStartedIntendeds],
         view.totalOrderId
     );
     store.dispatch(pendingLikesSliceRemoveBulk(fencingTokensResponse));
+    store.dispatch(
+        pendingGameStartedIntendedsSliceRemoveBulk(fencingTokensResponse)
+    );
     store.dispatch(totalOrderIdSliceSetId(view.totalOrderId));
     store.dispatch(gamesSliceSet(view.games));
     const currentGames = view.games.filter((game) => game.status === 0);

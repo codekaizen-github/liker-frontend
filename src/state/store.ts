@@ -8,6 +8,7 @@ import succeededLikesReducer from './slices/succeededLikesSlice';
 import gameStateReducer from './slices/gameStateSlice';
 import gameIdReducer from './slices/gameIdSlice';
 import gamesReducer from './slices/gamesSlice';
+import pendingGameStartedIntendedsSliceReducer from './slices/pendingGameStartedIntendedSlice';
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         gameState: gameStateReducer,
         gameId: gameIdReducer,
         games: gamesReducer,
+        pendingGameStartedIntendeds: pendingGameStartedIntendedsSliceReducer,
     },
 });
 
