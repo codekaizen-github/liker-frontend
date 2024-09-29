@@ -5,27 +5,41 @@ import {
     setActiveGame as gamesSliceSetActiveGame,
 } from './state/slices/gamesSlice';
 
-export async function processNewMaterializedView(view: {
-    totalOrderId: number;
-    userId: number;
-    games: {
-        likeCount: number;
-        status: number;
-        successfulLikes: number;
-        failedLikes: number;
-        id: number;
-    }[];
-}) {
+import { removeBulk as pendingLikesSliceRemoveBulk } from './state/slices/pendingLikesSlice';
+
+export async function processNewMaterializedView(
+    view: {
+        totalOrderId: number;
+        userId: number;
+        games: {
+            likeCount: number;
+            status: number;
+            successfulLikes: number;
+            failedLikes: number;
+            id: number;
+        }[];
+    },
+    fetchUserFencingTokens: (
+        fencingTokens: string[],
+        totalOrderId?: number
+    ) => Promise<string[]>
+) {
     console.log({ view });
     if ((store.getState().totalOrderId.value ?? 0) >= view.totalOrderId) {
         return;
     }
+    const pendingLikes = store.getState().pendingLikes.value;
+    const fencingTokensResponse = await fetchUserFencingTokens(
+        pendingLikes,
+        view.totalOrderId
+    );
+    store.dispatch(pendingLikesSliceRemoveBulk(fencingTokensResponse));
     store.dispatch(totalOrderIdSliceSetId(view.totalOrderId));
     store.dispatch(gamesSliceSet(view.games));
-    const activeGames = view.games.filter((game) => game.status === 0);
-    const activeGame =
-        activeGames.length > 0 ? activeGames[activeGames.length - 1] : null;
-    store.dispatch(gamesSliceSetActiveGame(activeGame));
+    const currentGames = view.games.filter((game) => game.status === 0);
+    const currentGame =
+        currentGames.length > 0 ? currentGames[currentGames.length - 1] : null;
+    store.dispatch(gamesSliceSetActiveGame(currentGame));
 
     //     On receiving a pushed update
     //     - [ ] IF new totalOrderId > current totalOrderId

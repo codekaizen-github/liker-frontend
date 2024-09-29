@@ -64,11 +64,11 @@ export interface Game {
 
 export interface GamesState {
     games: Game[];
-    activeGame: Game | null;
+    currentGame: Game | null;
 }
 const initialState: GamesState = {
     games: [],
-    activeGame: null,
+    currentGame: null,
 };
 
 export const gamesSlice = createSlice({
@@ -81,7 +81,7 @@ export const gamesSlice = createSlice({
             state.value.games = action.payload;
         },
         setActiveGame(state, action: PayloadAction<Game | null>) {
-            state.value.activeGame = action.payload;
+            state.value.currentGame = action.payload;
         },
     },
 });
