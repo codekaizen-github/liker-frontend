@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './slices/authSlice';
 import totalOrderIdReducer from './slices/totalOrderIdSlice';
-import emailReducer from './slices/emailSlice';
 import likeEnabledReducer from './slices/likeEnabledSlice';
 import pendingLikesReducer from './slices/pendingLikesSlice';
 import failedLikesReducer from './slices/failedLikesSlice';
@@ -11,8 +11,8 @@ import gamesReducer from './slices/gamesSlice';
 
 const store = configureStore({
     reducer: {
+        auth: authReducer,
         totalOrderId: totalOrderIdReducer,
-        email: emailReducer,
         likeEnabled: likeEnabledReducer,
         pendingLikes: pendingLikesReducer,
         failedLikes: failedLikesReducer,

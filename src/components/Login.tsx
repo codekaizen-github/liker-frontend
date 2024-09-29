@@ -1,36 +1,14 @@
-import { RootState } from "../state/store";
-import { requestAuthorization } from "../state/slices/emailSlice";
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
+import React from 'react';
+import LoginButton from './LoginButton';
 
-export function Login() {
-	const email = useAppSelector((state: RootState) => state.email.value);
-	const dispatch = useAppDispatch();
-	const [inputEmail, setInputEmail] = useState(email);
+const Login: React.FC = () => {
+    return (
+        <div>
+            <h1>Login</h1>
 
-	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setInputEmail(event.target.value);
-	};
+            <LoginButton />
+        </div>
+    );
+};
 
-	const handleButtonClick = () => {
-		dispatch(requestAuthorization(inputEmail));
-	};
-
-	return (
-		<div>
-			<h1>Login</h1>
-			<div>
-				<label>Email: </label>
-				<input
-					type="email"
-					value={inputEmail}
-					onChange={handleInputChange}
-					placeholder="Enter your email"
-				/>
-			</div>
-			<div>
-				<button onClick={handleButtonClick}>Submit</button>
-			</div>
-		</div>
-	);
-}
+export default Login;
