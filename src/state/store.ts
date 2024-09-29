@@ -7,6 +7,7 @@ import failedLikesReducer from './slices/failedLikesSlice';
 import succeededLikesReducer from './slices/succeededLikesSlice';
 import gameStateReducer from './slices/gameStateSlice';
 import gameIdReducer from './slices/gameIdSlice';
+import gamesReducer from './slices/gamesSlice';
 
 const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
         succeededLikes: succeededLikesReducer,
         gameState: gameStateReducer,
         gameId: gameIdReducer,
+        games: gamesReducer,
     },
 });
 
