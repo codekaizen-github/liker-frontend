@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import totalOrderIdReducer from './slices/totalOrderIdSlice';
 import emailReducer from './slices/emailSlice';
 import likeEnabledReducer from './slices/likeEnabledSlice';
 import pendingLikesReducer from './slices/pendingLikesSlice';
@@ -9,6 +10,7 @@ import gameIdReducer from './slices/gameIdSlice';
 
 const store = configureStore({
     reducer: {
+        totalOrderId: totalOrderIdReducer,
         email: emailReducer,
         likeEnabled: likeEnabledReducer,
         pendingLikes: pendingLikesReducer,
