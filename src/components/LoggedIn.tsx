@@ -22,9 +22,7 @@ export function LoggedIn({ email }: LoggedInProps) {
         if (totalOrderId !== undefined) {
             url.searchParams.append('totalOrderId', totalOrderId.toString());
         }
-        const fencingTokensRaw = await fetch(
-            HTTP_URL_FENCING_TOKENS.toString()
-        );
+        const fencingTokensRaw = await fetch(url.toString());
         const response: {
             id: number;
             totalOrderId: number;
