@@ -1,6 +1,6 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 import writeEvent from '../../writeEvent';
-// import { RootGetStateType } from '../store';
+import { RootGetStateType } from '../store';
 interface PendingLikesState {
     value: string[];
 }
@@ -33,10 +33,13 @@ export const pendingLikesSlice = createSlice({
 
 export const newLike =
     (gameId: number) =>
-    async (dispatch: Dispatch /*, getState: RootGetStateType*/) => {
+    async (dispatch: Dispatch, getState: RootGetStateType) => {
         const fencingToken = await writeEvent('like-intended', {
             game: {
                 id: gameId,
+            },
+            user: {
+                email: getState().email.value,
             },
         });
         dispatch(pendingLikesSlice.actions.add(fencingToken));
