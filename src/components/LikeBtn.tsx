@@ -13,10 +13,11 @@ export function LikeBtn() {
         (state: RootState) => state.pendingLikes.value.length
     );
 
-    const pendingGameStartedIndendeds = useSelector(
+    const pendingGameStartedIntendeds = useSelector(
         (state: RootState) => state.pendingGameStartedIntendeds.value
     );
-    const pendingNewGameRequests = pendingGameStartedIndendeds.length > 0;
+    const pendingNewGameRequests = pendingGameStartedIntendeds.length > 0;
+    console.log({ pendingGameStartedIntendeds });
     // const failedLikes = useSelector(
     //     (state: RootState) => state.failedLikes.value
     // );
