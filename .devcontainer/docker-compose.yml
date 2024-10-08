@@ -7,8 +7,14 @@ services:
         volumes:
             - ./:/workspace
         networks:
-            - liker_external_network
-            - liker_frontend_internal_network
+            liker_external_network:
+                aliases:
+                    - liker_frontend
+                    - liker-frontend.liker
+                    - liker.codekaizen.net
+            liker_frontend_internal_network:
+        dns:
+            - 8.8.8.8
 networks:
     liker_external_network:
         external: true
