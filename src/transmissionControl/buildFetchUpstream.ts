@@ -28,7 +28,9 @@ export function buildFetchUpstream(url: string): FetchUpstream {
         if (offset !== undefined) {
             urlParsed.searchParams.append('offset', offset.toString());
         }
-        const response = await fetch(urlParsed.toString());
+        const response = await fetch(urlParsed.toString(), {
+            credentials: 'include',
+        });
         const streamOuts = await response.json();
         return streamOuts;
     };

@@ -1,7 +1,10 @@
 const fencingTokenStore: string[] = [];
 export async function addToken() {
     const response = await fetch(
-        import.meta.env.VITE_LIKER_FENCING_TOKEN_URL ?? ''
+        import.meta.env.VITE_LIKER_FENCING_TOKEN_URL ?? '',
+        {
+            credentials: 'include',
+        }
     );
     const { fencingToken } = await response.json();
     fencingTokenStore.push(fencingToken);
@@ -32,6 +35,7 @@ export default async function writeEvent(
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
             data: {
                 type,

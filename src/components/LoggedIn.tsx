@@ -7,13 +7,12 @@ interface LoggedInProps {
 }
 export function LoggedIn({ email }: LoggedInProps) {
     // const WS_URL = 'ws://localhost:3030';
-    const WS_URL = 'wss://liker-stream-processor-user-events.liker:8443/ws/';
     const HTTP_URL_USER_VIEW = new URL(
-        'https://liker-stream-processor-user-events.liker:8443/userView'
+        import.meta.env.VITE_LIKER_READ_PATH_USER_VIEW_URL ?? ''
     );
     HTTP_URL_USER_VIEW.searchParams.append('email', email);
     const HTTP_URL_FENCING_TOKENS = new URL(
-        'https://liker-event-log.liker:8443/userFencingToken'
+        import.meta.env.VITE_LIKER_USER_FENCING_TOKEN_URL ?? ''
     );
     HTTP_URL_FENCING_TOKENS.searchParams.append('email', email);
     async function fetchUserFencingTokens(
@@ -40,21 +39,31 @@ export function LoggedIn({ email }: LoggedInProps) {
         console.log({ response });
         return response.map((r) => r.fencingToken.toString());
     }
-    const { lastJsonMessage } = useWebSocket(`${WS_URL}?email=${email}`, {
-        onOpen: async () => {
-            console.log('WebSocket connection established.');
-            const viewRaw = await fetch(HTTP_URL_USER_VIEW.toString());
-            const view = await viewRaw.json();
-            await processNewMaterializedView(view, fetchUserFencingTokens);
-        },
-        onMessage: async (message) => {
-            await processNewMaterializedView(
-                JSON.parse(message.data),
-                fetchUserFencingTokens
-            );
-        },
-        shouldReconnect: (closeEvent) => true,
-    });
+    console.log(
+        'VITE_LIKER_READ_PATH_WS_URL',
+        `${import.meta.env.VITE_LIKER_READ_PATH_WS_URL ?? ''}`
+    );
+    const { lastJsonMessage } = useWebSocket(
+        // `${import.meta.env.VITE_LIKER_READ_PATH_WS_URL ?? ''}?email=${email}`,
+        `${import.meta.env.VITE_LIKER_READ_PATH_WS_URL ?? ''}`,
+        {
+            onOpen: async () => {
+                console.log('WebSocket connection established.');
+                const viewRaw = await fetch(HTTP_URL_USER_VIEW.toString(), {
+                    credentials: 'include',
+                });
+                const view = await viewRaw.json();
+                await processNewMaterializedView(view, fetchUserFencingTokens);
+            },
+            onMessage: async (message) => {
+                await processNewMaterializedView(
+                    JSON.parse(message.data),
+                    fetchUserFencingTokens
+                );
+            },
+            shouldReconnect: (closeEvent) => true,
+        }
+    );
     // TODO: Process in total order
     return (
         <>
