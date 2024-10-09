@@ -3,5 +3,5 @@ services:
         image: node:20
         environment:
             - NODE_ENV=${LIKER_FRONTEND_NODE_ENV}
-        ports:
-            - ${LIKER_FRONTEND_HOST_PORT}:80
+        # ports:
+        # - ${LIKER_FRONTEND_HOST_PORT}:80

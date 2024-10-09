@@ -8,6 +8,13 @@ export default defineConfig({
     server: {
         port: 80,
         host: '0.0.0.0', // node container in docker. This is a MUST have.
-        origin: 'http://localhost:3040', // exposed node container address
+        origin: 'https://likeriker.codekaizen.net:8443', // exposed node container address
+        hmr: {
+            clientPort: 8443,
+            port: 80,
+            host: 'liker.codekaizen.net',
+            path: '/ws/',
+            protocol: 'wss',
+        },
     },
 });
