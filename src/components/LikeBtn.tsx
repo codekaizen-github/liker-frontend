@@ -4,7 +4,7 @@ import { newLike } from '../state/slices/pendingLikesSlice';
 
 export function LikeBtn() {
     const dispatch: AppDispatch = useDispatch();
-    const email = useSelector((state: RootState) => state.email.value);
+    // const email = useSelector((state: RootState) => state.email.value);
     // const likeEnabled = useSelector(
     //     (state: RootState) => state.likeEnabled.value
     // );
@@ -34,7 +34,7 @@ export function LikeBtn() {
 
     return (
         <>
-            <h1>Welcome, {email}!</h1>
+            {/* <h1>Welcome, {email}!</h1> */}
             <div>Total Order ID: {totalOrderId}</div>
             <div>
                 {likeEnabled ? 'Likes are enabled!' : 'Likes are disabled'}
