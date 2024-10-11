@@ -4,27 +4,19 @@ import useWebSocket from 'react-use-websocket';
 import { processNewMaterializedView } from '../processNewMaterializedView';
 import writeEvent from '../writeEvent';
 import { useEffect } from 'react';
-interface LoggedInProps {
-    email: string;
-}
-export function LoggedIn({ email }: LoggedInProps) {
-    useEffect(() => {
-        writeEvent('user-login-intended', {
-            timestamp: new Date().toISOString(),
-            user: {
-                email: email,
-            },
-        });
-    }, [email]);
+export function LoggedIn() {
+    writeEvent('user-login-intended', {
+        timestamp: new Date().toISOString(),
+    });
     // const WS_URL = 'ws://localhost:3030';
     const HTTP_URL_USER_VIEW = new URL(
         import.meta.env.VITE_LIKER_READ_PATH_USER_VIEW_URL ?? ''
     );
-    HTTP_URL_USER_VIEW.searchParams.append('email', email);
+    // HTTP_URL_USER_VIEW.searchParams.append('email', email);
     const HTTP_URL_FENCING_TOKENS = new URL(
         import.meta.env.VITE_LIKER_USER_FENCING_TOKEN_URL ?? ''
     );
-    HTTP_URL_FENCING_TOKENS.searchParams.append('email', email);
+    // HTTP_URL_FENCING_TOKENS.searchParams.append('email', email);
     async function fetchUserFencingTokens(
         fencingTokens: string[],
         totalOrderId?: number
