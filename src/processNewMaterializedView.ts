@@ -6,6 +6,7 @@ import {
     setActiveGame as gamesSliceSetActiveGame,
 } from './state/slices/gamesSlice';
 
+import { removeBulk as pendingGameSliceRemoveBulk } from './state/slices/pendingGameSlice';
 import { removeBulk as pendingLikesSliceRemoveBulk } from './state/slices/pendingLikesSlice';
 import { setUser, User } from './state/slices/userSlice';
 
@@ -30,12 +31,14 @@ export async function processNewMaterializedView(
         view.totalOrderId
     );
     store.dispatch(setUser(view.user));
+    store.dispatch(pendingGameSliceRemoveBulk(fencingTokensResponse));
     store.dispatch(pendingLikesSliceRemoveBulk(fencingTokensResponse));
     store.dispatch(totalOrderIdSliceSetId(view.totalOrderId));
     store.dispatch(gamesSliceSet(view.games));
-    const currentGames = view.games.filter((game) => game.status === 0);
-    const currentGame =
-        currentGames.length > 0 ? currentGames[currentGames.length - 1] : null;
+    const currentGame = view.games[view.games.length - 1] ?? null;
+    // const currentGames = view.games.filter((game) => game.status === 0);
+    // const currentGame =
+    //     currentGames.length > 0 ? currentGames[currentGames.length - 1] : null;
     store.dispatch(gamesSliceSetActiveGame(currentGame));
 
     //     On receiving a pushed update

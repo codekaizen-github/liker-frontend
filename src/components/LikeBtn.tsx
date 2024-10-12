@@ -1,9 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
 import { newLike } from '../state/slices/pendingLikesSlice';
+import { newGame } from '../state/slices/pendingGameSlice';
 
 export function LikeBtn() {
     const dispatch: AppDispatch = useDispatch();
+    const pendingGame = useSelector(
+        (state: RootState) => state.pendingGame.value
+    );
     const pendingLikes = useSelector(
         (state: RootState) => state.pendingLikes.value.length
     );
@@ -11,7 +15,13 @@ export function LikeBtn() {
     const games = useSelector((state: RootState) => state.games.value);
     const currentGame = games.currentGame;
     const likeEnabled = currentGame ? currentGame.status === 0 : false;
+    const newGameEnabled =
+        (currentGame ? currentGame.status === 1 : false) &&
+        pendingGame === null;
 
+    const handleNewGameClick = () => {
+        dispatch(newGame());
+    };
     const handleLikeClick = () => {
         if (currentGame) {
             dispatch(newLike(currentGame.id));
@@ -39,8 +49,12 @@ export function LikeBtn() {
                 <div>Total Likes: {currentGame?.likeCount ?? 0}</div>
                 <div>Your Pending Likes: {pendingLikes}</div>
                 <div>Your Failed Likes: {currentGame?.failedLikes ?? 0}</div>
-                <div>Your Succeeded Likes: {currentGame?.successfulLikes ?? 0}</div>
-                {/* <div>Game State: {games.}</div> */}
+                <div>
+                    Your Succeeded Likes: {currentGame?.successfulLikes ?? 0}
+                </div>
+                {newGameEnabled && (
+                    <button onClick={handleNewGameClick}>New Game</button>
+                )}
             </div>
         </>
     );
