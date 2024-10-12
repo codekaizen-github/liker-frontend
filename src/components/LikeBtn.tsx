@@ -7,6 +7,7 @@ export function LikeBtn() {
     const pendingLikes = useSelector(
         (state: RootState) => state.pendingLikes.value.length
     );
+    const user = useSelector((state: RootState) => state.user.value);
     const games = useSelector((state: RootState) => state.games.value);
     const currentGame = games.currentGame;
     const likeEnabled = currentGame ? currentGame.status === 0 : false;
@@ -21,9 +22,13 @@ export function LikeBtn() {
         (state: RootState) => state.totalOrderId.value
     );
 
+    if (!user.user) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <>
-            {/* <h1>Welcome, {email}!</h1> */}
+            <h1>Welcome, {user.user?.email}!</h1>
             <div>Total Order ID: {totalOrderId}</div>
             <div>Game ID: {currentGame?.id}</div>
             <div>
@@ -31,9 +36,10 @@ export function LikeBtn() {
                 <button disabled={!likeEnabled} onClick={handleLikeClick}>
                     Like
                 </button>
-                <div>Pending Likes: {pendingLikes}</div>
-                <div>Failed Likes: {currentGame?.failedLikes ?? 0}</div>
-                <div>Succeeded Likes: {currentGame?.successfulLikes ?? 0}</div>
+                <div>Total Likes: {currentGame?.likeCount ?? 0}</div>
+                <div>Your Pending Likes: {pendingLikes}</div>
+                <div>Your Failed Likes: {currentGame?.failedLikes ?? 0}</div>
+                <div>Your Succeeded Likes: {currentGame?.successfulLikes ?? 0}</div>
                 {/* <div>Game State: {games.}</div> */}
             </div>
         </>

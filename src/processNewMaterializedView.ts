@@ -1,23 +1,19 @@
 import store from './state/store';
 import { setId as totalOrderIdSliceSetId } from './state/slices/totalOrderIdSlice';
 import {
+    Game,
     setGames as gamesSliceSet,
     setActiveGame as gamesSliceSetActiveGame,
 } from './state/slices/gamesSlice';
 
 import { removeBulk as pendingLikesSliceRemoveBulk } from './state/slices/pendingLikesSlice';
+import { setUser, User } from './state/slices/userSlice';
 
 export async function processNewMaterializedView(
     view: {
         totalOrderId: number;
-        userId: number;
-        games: {
-            likeCount: number;
-            status: number;
-            successfulLikes: number;
-            failedLikes: number;
-            id: number;
-        }[];
+        user: User;
+        games: Game[];
     },
     fetchUserFencingTokens: (
         fencingTokens: string[],
@@ -33,8 +29,7 @@ export async function processNewMaterializedView(
         pendingLikes,
         view.totalOrderId
     );
-    console.log({ pendingLikes });
-    console.log({ fencingTokensResponse });
+    store.dispatch(setUser(view.user));
     store.dispatch(pendingLikesSliceRemoveBulk(fencingTokensResponse));
     store.dispatch(totalOrderIdSliceSetId(view.totalOrderId));
     store.dispatch(gamesSliceSet(view.games));
