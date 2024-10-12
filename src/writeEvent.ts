@@ -7,7 +7,7 @@ export async function addToken() {
         }
     );
     const { fencingToken } = await response.json();
-    fencingTokenStore.push(fencingToken);
+    fencingTokenStore.push(fencingToken.toString());
 }
 export function addTokens(amount: number) {
     for (let i = 0; i < amount; i++) {

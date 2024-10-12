@@ -5,9 +5,11 @@ import { processNewMaterializedView } from '../processNewMaterializedView';
 import writeEvent from '../writeEvent';
 import { useEffect } from 'react';
 export function LoggedIn() {
-    writeEvent('user-login-intended', {
-        timestamp: new Date().toISOString(),
-    });
+    useEffect(() => {
+        writeEvent('user-login-intended', {
+            timestamp: new Date().toISOString(),
+        });
+    }, []);
     // const WS_URL = 'ws://localhost:3030';
     const HTTP_URL_USER_VIEW = new URL(
         import.meta.env.VITE_LIKER_READ_PATH_USER_VIEW_URL ?? ''
@@ -63,7 +65,12 @@ export function LoggedIn() {
                     fetchUserFencingTokens
                 );
             },
+            onError: (event) => {
+                console.log('WebSocket error:', event);
+            },
             shouldReconnect: (closeEvent) => true,
+            retryOnError: true,
+            reconnectAttempts: Number.MAX_SAFE_INTEGER,
         }
     );
     // TODO: Process in total order

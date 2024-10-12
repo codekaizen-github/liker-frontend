@@ -33,6 +33,8 @@ export async function processNewMaterializedView(
         pendingLikes,
         view.totalOrderId
     );
+    console.log({ pendingLikes });
+    console.log({ fencingTokensResponse });
     store.dispatch(pendingLikesSliceRemoveBulk(fencingTokensResponse));
     store.dispatch(totalOrderIdSliceSetId(view.totalOrderId));
     store.dispatch(gamesSliceSet(view.games));
